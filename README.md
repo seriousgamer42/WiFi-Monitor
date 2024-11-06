@@ -7,7 +7,7 @@ A Python script that automatically monitors and manages your Windows 11 WiFi con
 - Continuous WiFi connection monitoring
 - Automatic WiFi reset on disconnection detection
 - Comprehensive logging system
-- Disconnection history tracking
+- Unlimited disconnection history tracking
 - Real-time status reporting
 - Summary statistics
 
@@ -49,8 +49,8 @@ The script generates two files:
      ```
 
 2. `disconnection_history.json`
-   - Persistent record of disconnection events
-   - Stores up to 100 most recent disconnections
+   - Persistent record of all disconnection events
+   - Stores the complete history of disconnections
    - Preserved between script runs
    - Example:
      ```json
@@ -58,6 +58,10 @@ The script generates two files:
        {
          "timestamp": "2024-11-05T10:35:20",
          "reconnected": true
+       },
+       {
+         "timestamp": "2024-11-06T14:22:41",
+         "reconnected": false
        }
      ]
      ```
@@ -77,7 +81,6 @@ The script generates two files:
 
 ### Status Reporting
 - Real-time disconnection notifications
-- Daily disconnection count
 - Total recorded disconnections
 - Timestamp of most recent disconnection
 
@@ -99,7 +102,6 @@ The script generates two files:
 
 You can modify these variables in the script to adjust its behavior:
 
-- `maxlen=100` in `deque` initialization: Change the number of stored disconnection events
 - `time.sleep(10)` in main loop: Adjust the connection check frequency
 - `time.sleep(5)` in `toggle_wifi()`: Modify the wait time after disabling WiFi
 - `consecutive_failures >= 2`: Change the number of failed checks before reset
