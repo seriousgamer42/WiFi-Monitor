@@ -10,7 +10,7 @@ import os
 class WifiMonitor:
     def __init__(self):
         self.setup_logging()
-        self.disconnection_history = deque(maxlen=100)  # Store last 100 disconnections
+        self.disconnection_history = deque()  # Store all disconnections
         self.load_history()
         self.last_status = True  # True = connected, False = disconnected
         
@@ -28,7 +28,7 @@ class WifiMonitor:
             if os.path.exists('disconnection_history.json'):
                 with open('disconnection_history.json', 'r') as f:
                     history = json.load(f)
-                    self.disconnection_history = deque(history, maxlen=100)
+                    self.disconnection_history = deque(history)
         except Exception as e:
             logging.error(f"Error loading disconnection history: {str(e)}")
             
@@ -81,20 +81,12 @@ class WifiMonitor:
         
         # Print summary to console
         print(f"\nDisconnection detected at {timestamp}")
-        print(f"Total disconnections today: {self.get_today_disconnections()}")
+        print(f"Total disconnections: {len(self.disconnection_history)}")
         
-    def get_today_disconnections(self):
-        """Count disconnections for today"""
-        today = datetime.now().date()
-        return sum(1 for d in self.disconnection_history 
-                  if datetime.fromisoformat(d['timestamp']).date() == today)
-
     def print_status(self):
         """Print current status summary"""
-        today_count = self.get_today_disconnections()
         total_count = len(self.disconnection_history)
         print(f"\nStatus Summary:")
-        print(f"Disconnections today: {today_count}")
         print(f"Total recorded disconnections: {total_count}")
         if self.disconnection_history:
             last_disconnect = datetime.fromisoformat(self.disconnection_history[-1]['timestamp'])
